@@ -1,9 +1,11 @@
-
 services:
   moblin:
     build:
       context: .
       dockerfile: Dockerfile
+    entrypoint: /app/app -address 0.0.0.0:9999 -reverse_proxy_base "${RELAY_PATH}"
+    ports:
+      - "9999:9999"
     networks:
       moblin-network:
         ipv4_address: 172.31.0.2
@@ -19,8 +21,8 @@ services:
       - "443:443/udp"
     environment:
       - RELAY_DOMAIN=${RELAY_DOMAIN}
-      - RELAY_PATH=${RELAY_PATH} 
-      - RELAY_PORT=${RELAY_PORT} 
+      - RELAY_PORT=${RELAY_PORT}
+      - RELAY_PATH=${RELAY_PATH}  
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
